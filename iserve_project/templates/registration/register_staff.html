@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Staff Registration | iServe{% endblock %}
+
+{% block content %}
+  <section class="content-grid">
+    <div class="panel">
+      <span class="eyebrow">Staff Access</span>
+      <h1>Create your staff account.</h1>
+      <p>
+        Staff registration gives you access to the office dashboard where you can
+        manage appointments, update request status, and track releases for your office.
+      </p>
+      <p style="font-size: 0.9rem; color: var(--muted); margin-top: 1rem;">
+        ℹ️ Your registration will be pending approval from the superadmin. You will receive confirmation once it's approved.
+      </p>
+      <div class="info-card" style="margin-top: 1rem;">
+        <strong>Required Information</strong>
+        <ul class="muted-list">
+          <li>Valid Staff/Employee ID</li>
+          <li>Contact phone number for verification</li>
+          <li>Office assignment</li>
+          <li>Strong password (minimum 8 characters)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>Staff Registration Request</h2>
+      <form class="form-stack" method="post">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+          <div class="error-box">{{ form.non_field_errors|striptags }}</div>
+        {% endif %}
+        <div>
+          <label for="id_username">Username</label>
+          {{ form.username }}
+          {% if form.username.errors %}<div class="error-box">{{ form.username.errors|striptags }}</div>{% endif %}
+        </div>
+        <div>
+          <label for="id_email">Email Address</label>
+          {{ form.email }}
+          {% if form.email.errors %}<div class="error-box">{{ form.email.errors|striptags }}</div>{% endif %}
+        </div>
+        <div>
+          <label for="id_office">Office Assignment</label>
+          {{ form.office }}
+          {% if form.office.errors %}<div class="error-box">{{ form.office.errors|striptags }}</div>{% endif %}
+        </div>
+        <div>
+          <label for="id_id_number">Employee/Staff ID</label>
+          {{ form.id_number }}
+          {% if form.id_number.errors %}<div class="error-box">{{ form.id_number.errors|striptags }}</div>{% endif %}
+        </div>
+        <div>
+          <label for="id_contact_number">Contact Phone Number</label>
+          {{ form.contact_number }}
+          {% if form.contact_number.errors %}<div class="error-box">{{ form.contact_number.errors|striptags }}</div>{% endif %}
+        </div>
+        <div>
+          <label for="id_password1">Password</label>
+          {{ form.password1 }}
+          {% if form.password1.errors %}<div class="error-box">{{ form.password1.errors|striptags }}</div>{% endif %}
+        </div>
+        <div>
+          <label for="id_password2">Confirm Password</label>
+          {{ form.password2 }}
+          {% if form.password2.errors %}<div class="error-box">{{ form.password2.errors|striptags }}</div>{% endif %}
+        </div>
+        <div class="action-row">
+          <button class="button" type="submit">Create Staff Account</button>
+          <a class="ghost-button" href="{% url 'login' %}">Already have an account?</a>
+        </div>
+      </form>
+    </div>
+  </section>
+{% endblock %}

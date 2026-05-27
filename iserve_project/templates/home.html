@@ -1,0 +1,296 @@
+﻿{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}iServe | Campus Document Services{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* Local specific styles for home.html to match the theme */
+  .hero-wrapper {
+    background:
+      linear-gradient(rgba(47, 77, 40, 0.55), rgba(47, 77, 40, 0.55)),
+      url("{% static 'images/Background-Mindoro State University.jpg' %}") center/cover no-repeat;
+    position: relative;
+    padding: 8rem 0;
+    text-align: center;
+    overflow: hidden;
+  }
+  
+  /* Mock silhouette */
+  .hero-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 100px;
+    background: url('data:image/svg+xml;utf8,<svg opacity="0.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" preserveAspectRatio="none"><path fill="white" d="M0,100 L0,50 L20,50 L20,30 L50,30 L50,60 L80,60 L80,20 L120,20 L120,70 L150,70 L150,40 L190,40 L190,80 L230,80 L230,10 L280,10 L280,60 L320,60 L320,30 L360,30 L360,90 L400,90 L400,50 L450,50 L450,20 L500,20 L500,60 L550,60 L550,15 L600,15 L600,70 L650,70 L650,35 L700,35 L700,80 L750,80 L750,40 L800,40 L800,10 L850,10 L850,60 L900,60 L900,25 L950,25 L950,70 L1000,70 L1000,100 Z"/></svg>') repeat-x bottom;
+    background-size: auto 100px;
+  }
+
+  .hero-box {
+    position: relative;
+    z-index: 10;
+    background: #ffffff;
+    border-radius: 12px;
+    display: inline-block;
+    padding: 3rem 4rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    max-width: 600px;
+  }
+  
+  .hero-box h1 {
+    color: var(--ink);
+    font-size: 2.2rem;
+    margin-bottom: 1rem;
+  }
+  .hero-box p {
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  /* Capabilities Grid (4 cols) */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    text-align: center;
+  }
+  
+  .feature-item {
+    padding: 1rem;
+  }
+
+  .feature-icon-wrapper {
+    width: 100px;
+    height: 100px;
+    background: var(--primary-blue);
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 0 8px #ffffff, 0 10px 20px rgba(0,0,0,0.1);
+    position: relative;
+  }
+
+  .feature-icon-wrapper span {
+    font-size: 2.5rem;
+    color: white;
+  }
+
+  .feature-item h3 {
+    color: var(--ink);
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .feature-item p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .feature-link {
+    color: var(--primary-blue);
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+
+  /* Portfolio Grid (3 cols) */
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .portfolio-card {
+    background: transparent;
+    border: none;
+  }
+
+  .portfolio-image {
+    background: #8e9a9f;
+    height: 180px;
+    width: 100%;
+    border: 6px solid #e9eaec;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+  
+  .portfolio-image span {
+    color: #ffffff;
+    font-size: 2rem;
+    opacity: 0.5;
+  }
+
+  .portfolio-title {
+    color: var(--accent-orange);
+    font-size: 1.1rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .portfolio-desc {
+    color: #a0aab2;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  
+  .portfolio-badge {
+    color: #e9eaec;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    display: block;
+    font-style: italic;
+  }
+
+  /* Testimonials */
+  .testimonial-wrapper {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .testimonial-quote {
+    font-size: 1.6rem;
+    line-height: 1.5;
+    color: var(--ink);
+    margin-bottom: 2rem;
+    font-style: italic;
+  }
+  .testimonial-author {
+    color: var(--accent-orange);
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+  }
+  .testimonial-avatars {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+  .avatar {
+    width: 50px;
+    height: 50px;
+    background: #ccc;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+  .avatar.active {
+    border-color: var(--accent-orange);
+    transform: scale(1.1);
+  }
+
+  @media (max-width: 900px) {
+    .features-grid, .portfolio-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 600px) {
+    .features-grid, .portfolio-grid {
+      grid-template-columns: 1fr;
+    }
+    .hero-box { margin: 0 1rem; padding: 2rem; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+  <!-- Hero Section -->
+  <section class="hero-wrapper">
+    <div class="container">
+      <div class="hero-box">
+        <h1>Campus Document<br>Workflow Services</h1>
+        <p>
+          Student registration, sign in, service selection, appointment scheduling, payment tracking, processing, and physical or digital release. All in one place.
+        </p>
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+          <a class="button-blue" href="{% url 'student_services' %}">Go to Services</a>
+          {% if request.user.is_authenticated and dashboard_route %}
+            <a class="button" href="{% url dashboard_route %}" style="background: var(--muted)">Open Dashboard</a>
+          {% else %}
+            <a class="button" href="{% url 'register' %}" style="background: var(--muted)">Create Account</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Capabilities Section -->
+  <section class="section-light">
+    <div class="container">
+      <div class="section-title">
+        <span>Our System Capabilities</span>
+      </div>
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="feature-icon-wrapper"><img src="{% static 'images/Icon-Request Management.png' %}" alt="Feature Icon" style="width: 100%; height: 100%; object-fit: contain; border-radius: 50%;"></div>
+          <h3>Request Management</h3>
+          <p>Student registration and login with comprehensive tracking through every stage.</p>
+          <a href="#" class="feature-link">Details...</a>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon-wrapper"><img src="{% static 'images/Icon-Payment Processing.png' %}" alt="Feature Icon" style="width: 100%; height: 100%; object-fit: contain; border-radius: 50%;"></div>
+          <h3>Payment Processing</h3>
+          <p>Integrated payment tracking and processing workflow for all student services.</p>
+          <a href="#" class="feature-link">Details...</a>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon-wrapper"><img src="{% static 'images/Icon-Real-Time Status.png' %}" alt="Feature Icon" style="width: 100%; height: 100%; object-fit: contain; border-radius: 50%;"></div>
+          <h3>Real-Time Status</h3>
+          <p>Staff dashboard with live updates and request status handling for fast processing.</p>
+          <a href="#" class="feature-link">Details...</a>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon-wrapper"><img src="{% static 'images/Icon-Document Release.png' %}" alt="Feature Icon" style="width: 100%; height: 100%; object-fit: contain; border-radius: 50%;"></div>
+          <h3>Document Release</h3>
+          <p>Support for both digital and physical release modes with full tracking capabilities.</p>
+          <a href="#" class="feature-link">Details...</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Portfolio / Awesome Services Section -->
+  <section class="section-dark">
+    <div class="container">
+      <div class="section-title-left">
+        <h2>Our Popular Services</h2>
+        <a class="button-blue" href="{% url 'student_services' %}">View All Work</a>
+      </div>
+      
+      <div class="portfolio-grid">
+        {% for service in services|slice:":3" %}
+          <div class="portfolio-card">
+            <div class="portfolio-image"><img src="{% static 'images/Services-'|add:service.name|add:'.png' %}" alt="Service Image" style="width: 100%; height: 100%; object-fit: cover;"></div>
+            <h3 class="portfolio-title">{{ service.name }}</h3>
+            <p class="portfolio-desc">{{ service.description|truncatechars:80 }}</p>
+            <span class="portfolio-badge">Release: {{ service.release }}</span>
+          </div>
+        {% empty %}
+          <div class="portfolio-card">
+            <div class="portfolio-image"><img src="{% static 'images/Services-Certification Requests.png' %}" alt="Service Image" style="width: 100%; height: 100%; object-fit: cover;"></div>
+            <h3 class="portfolio-title">Certification Requests</h3>
+            <p class="portfolio-desc">Generate enrollment, graduation, and good moral certificates.</p>
+          </div>
+          <div class="portfolio-card">
+            <div class="portfolio-image"><img src="{% static 'images/Services-Document Authentication.png' %}" alt="Service Image" style="width: 100%; height: 100%; object-fit: cover;"></div>
+            <h3 class="portfolio-title">Document Authentication</h3>
+            <p class="portfolio-desc">Submit academic documents for verification and release tracking.</p>
+          </div>
+          <div class="portfolio-card">
+            <div class="portfolio-image"><img src="{% static 'images/Services-Appointment Scheduling.png' %}" alt="Service Image" style="width: 100%; height: 100%; object-fit: cover;"></div>
+            <h3 class="portfolio-title">Appointment Scheduling</h3>
+            <p class="portfolio-desc">Choose a release schedule and track request completion in real time.</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+
+
+{% endblock %}
+
+

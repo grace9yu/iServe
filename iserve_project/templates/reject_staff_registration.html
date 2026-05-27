@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Reject Staff Registration | iServe{% endblock %}
+
+{% block content %}
+  <section class="content-grid">
+    <div class="panel">
+      <span class="eyebrow">Staff Registration</span>
+      <h1>Reject Staff Registration</h1>
+      <p>Provide a reason for rejecting this staff registration request.</p>
+    </div>
+    <div class="panel">
+      <h2>Registration Details</h2>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 1.5rem 0;">
+        <div>
+          <p><strong>Username:</strong></p>
+          <p>{{ registration.username }}</p>
+        </div>
+        <div>
+          <p><strong>Email:</strong></p>
+          <p>{{ registration.email }}</p>
+        </div>
+        <div>
+          <p><strong>Office:</strong></p>
+          <p>{{ registration.office.get_name_display }}</p>
+        </div>
+        <div>
+          <p><strong>Staff ID:</strong></p>
+          <p>{{ registration.id_number }}</p>
+        </div>
+        <div>
+          <p><strong>Contact Number:</strong></p>
+          <p>{{ registration.contact_number }}</p>
+        </div>
+        <div>
+          <p><strong>Applied:</strong></p>
+          <p>{{ registration.created_at|date:"M d, Y H:i" }}</p>
+        </div>
+      </div>
+
+      <form method="post" style="margin-top: 1.5rem;">
+        {% csrf_token %}
+        <div>
+          <label for="rejection_reason"><strong>Rejection Reason</strong></label>
+          <textarea 
+            id="rejection_reason" 
+            name="rejection_reason" 
+            rows="5" 
+            required
+            placeholder="Explain why this registration is being rejected..."
+            style="width: 100%; padding: 0.75rem; border: 1px solid var(--line); border-radius: 10px; font-family: inherit; font-size: 1rem;">
+          </textarea>
+        </div>
+
+        <div class="action-row" style="margin-top: 1.5rem;">
+          <button class="button" style="background: var(--danger);" type="submit">Reject Registration</button>
+          <a class="ghost-button" href="{% url 'superadmin_dashboard' %}">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </section>
+{% endblock %}

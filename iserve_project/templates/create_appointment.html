@@ -1,0 +1,202 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}New Request | iServe{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+  <div class="container">
+    
+    <div class="dash-header">
+      <div>
+        <span class="eyebrow" style="color: var(--primary-blue); font-size: 0.85rem; font-weight: 700; text-transform: uppercase;">SERVICE REQUEST</span>
+        <h1>Create a new appointment</h1>
+        <p style="color: var(--muted); margin-top: 0.5rem; font-size: 0.95rem;">Select the office, choose your service type, schedule your appointment, and select how you'd like to receive your documents.</p>
+      </div>
+      <div class="action-row" style="gap: 1rem; display: flex;">
+        <a class="button" style="background: var(--light-bg); color: var(--ink); border: 1px solid var(--line);" href="{% url 'student_dashboard' %}">Back to Dashboard</a>
+      </div>
+    </div>
+
+    <div class="dash-grid" style="grid-template-columns: 1fr; max-width: 800px; margin: 0 auto;">
+      
+      <div class="panel">
+        <div class="panel-head">
+          <h2 style="font-size: 1.25rem;">Request Details</h2>
+        </div>
+        <form method="post">
+          {% csrf_token %}
+          
+          {% if form.non_field_errors %}
+            <div style="background: rgba(220, 53, 69, 0.1); color: var(--danger); padding: 1rem; border-radius: 4px; margin-bottom: 1.5rem;">
+              {{ form.non_field_errors|striptags }}
+            </div>
+          {% endif %}
+
+          <div style="display: grid; gap: 1.5rem;">
+            <div>
+              <label for="{{ form.office.id_for_label }}" style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--ink);">Office</label>
+              {{ form.office }}
+              {% if form.office.errors %}<span style="color: var(--danger); font-size: 0.85rem; display: block; margin-top: 0.25rem;">{{ form.office.errors|striptags }}</span>{% endif %}
+            </div>
+            
+            <div>
+              <label for="{{ form.service_type.id_for_label }}" style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--ink);">Service Type</label>
+              {{ form.service_type }}
+              {% if form.service_type.errors %}<span style="color: var(--danger); font-size: 0.85rem; display: block; margin-top: 0.25rem;">{{ form.service_type.errors|striptags }}</span>{% endif %}
+            </div>
+
+            <div>
+              <label for="{{ form.number_of_copies.id_for_label }}" style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--ink);">Number of Copies</label>
+              {{ form.number_of_copies }}
+              {% if form.number_of_copies.errors %}<span style="color: var(--danger); font-size: 0.85rem; display: block; margin-top: 0.25rem;">{{ form.number_of_copies.errors|striptags }}</span>{% endif %}
+            </div>
+            
+            <div>
+              <label for="{{ form.semester_and_academic_year.id_for_label }}" style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--ink);">Semester & Academic Year</label>
+              {{ form.semester_and_academic_year }}
+              {% if form.semester_and_academic_year.errors %}<span style="color: var(--danger); font-size: 0.85rem; display: block; margin-top: 0.25rem;">{{ form.semester_and_academic_year.errors|striptags }}</span>{% endif %}
+            </div>
+
+            <div>
+              <label for="{{ form.scheduled_at.id_for_label }}" style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--ink);">Appointment Date & Time</label>
+              {{ form.scheduled_at }}
+              {% if form.scheduled_at.errors %}<span style="color: var(--danger); font-size: 0.85rem; display: block; margin-top: 0.25rem;">{{ form.scheduled_at.errors|striptags }}</span>{% endif %}
+            </div>
+            
+            <div>
+              <label for="{{ form.release_mode.id_for_label }}" style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--ink);">Release Mode</label>
+              {{ form.release_mode }}
+              {% if form.release_mode.errors %}<span style="color: var(--danger); font-size: 0.85rem; display: block; margin-top: 0.25rem;">{{ form.release_mode.errors|striptags }}</span>{% endif %}
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
+              {{ form.payment_required }}
+              <label for="{{ form.payment_required.id_for_label }}" style="font-weight: 600; color: var(--ink); margin: 0; cursor: pointer;">Payment Required</label>
+              {% if form.payment_required.errors %}<span style="color: var(--danger); font-size: 0.85rem;">{{ form.payment_required.errors|striptags }}</span>{% endif %}
+            </div>
+          </div>
+          
+          <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--line);">
+            <button class="button-blue" type="submit" style="padding: 0.75rem 2rem; font-size: 1rem; border: none; cursor: pointer; width: 100%;">Submit Request</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Add styling to form inputs dynamically rendered by django */
+  form input[type="text"],
+  form input[type="email"],
+  form input[type="datetime-local"],
+  form input[type="password"],
+  form input[type="number"],
+  form select,
+  form textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: #f8f9fa;
+    font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-size: 1rem;
+    color: var(--ink);
+  }
+  
+  form input[type="checkbox"] {
+    width: 1.25rem;
+    height: 1.25rem;
+    cursor: pointer;
+  }
+
+  form input:focus, form select:focus, form textarea:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+</style>
+
+<script>
+  const serviceTypeOptions = {
+    "registrar": [
+      ["Transcript of Records", "Transcript of Records"],
+      ["Certification Requests", "Certification Requests"],
+      ["Document Authentication", "Document Authentication"],
+      ["Appointment Scheduling", "Appointment Scheduling"],
+      ["Other", "Other"],
+    ],
+    "guidance_office": [
+      ["Counseling", "Counseling"],
+      ["Mental Health Support", "Mental Health Support"],
+      ["Certificates of Good Moral Character", "Certificates of Good Moral Character"],
+      ["Assessment & Profiling", "Assessment & Profiling"],
+      ["Application Career & Scholarship Support", "Application Career & Scholarship Support"],
+      ["Psychological Exam", "Psychological Exam"],
+      ["Exit Form Application", "Exit Form Application"],
+    ],
+    "student_affairs": [
+      ["Student Support", "Student Support"],
+      ["Student Records", "Student Records"],
+      ["Enrollment Verification", "Enrollment Verification"],
+      ["Other", "Other"],
+    ],
+    "production_office": [
+      ["Document Production", "Document Production"],
+      ["Printing Request", "Printing Request"],
+      ["Other", "Other"],
+    ],
+    "library": [
+      ["Book Reservation", "Book Reservation"],
+      ["Library Account Assistance", "Library Account Assistance"],
+      ["Other", "Other"],
+    ],
+  };
+
+  const officeKeyByLabel = {
+    "Registrar": "registrar",
+    "Guidance Office": "guidance_office",
+    "Office of Students Affair and Services": "student_affairs",
+    "Production Office": "production_office",
+    "Library": "library",
+  };
+
+  function updateServiceTypeOptions() {
+    const officeSelect = document.getElementById('id_office');
+    const serviceTypeSelect = document.getElementById('id_service_type');
+    if (!officeSelect || !serviceTypeSelect) return;
+
+    const selectedOptionLabel = officeSelect.selectedOptions[0]?.text?.trim();
+    const selectedOffice = officeKeyByLabel[selectedOptionLabel] || officeSelect.value;
+    const options = serviceTypeOptions[selectedOffice] || [];
+
+    serviceTypeSelect.innerHTML = '';
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = options.length ? 'Select a service type' : 'Select an office first';
+    placeholder.disabled = true;
+    placeholder.selected = true;
+    serviceTypeSelect.appendChild(placeholder);
+
+    options.forEach(([value, label]) => {
+      const option = document.createElement('option');
+      option.value = value;
+      option.textContent = label;
+      serviceTypeSelect.appendChild(option);
+    });
+
+    serviceTypeSelect.disabled = options.length === 0;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const officeSelect = document.getElementById('id_office');
+    if (officeSelect) {
+      updateServiceTypeOptions();
+      officeSelect.addEventListener('change', updateServiceTypeOptions);
+    }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,115 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}Staff Dashboard | iServe{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+  <div class="container">
+    
+    <div class="dash-header">
+      <div>
+        <span class="eyebrow" style="color: var(--primary-blue); font-size: 0.85rem; font-weight: 700; text-transform: uppercase;">STAFF DASHBOARD</span>
+        <h1>{{ office_name }} Overview</h1>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="metrics-card">
+        <div class="metric-icon blue">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect><path d="M9 14h6"></path><path d="M9 18h6"></path><path d="M9 10h6"></path></svg>
+        </div>
+        <div class="metric-info">
+          <span class="metric-value">{{ total_count }}</span>
+          <span class="metric-label">Total requests</span>
+        </div>
+      </div>
+      
+      <div class="metrics-card">
+        <div class="metric-icon purple">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        </div>
+        <div class="metric-info">
+          <span class="metric-value">{{ processing_count }}</span>
+          <span class="metric-label">Processing</span>
+        </div>
+      </div>
+      
+      <div class="metrics-card">
+        <div class="metric-icon green">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+        </div>
+        <div class="metric-info">
+          <span class="metric-value">{{ ready_count }}</span>
+          <span class="metric-label">Ready for release</span>
+        </div>
+      </div>
+
+      <div class="metrics-card">
+        <div class="metric-icon red">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+        </div>
+        <div class="metric-info">
+          <span class="metric-value">{{ incomplete_count }}</span>
+          <span class="metric-label">Incomplete</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-grid">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Student Requests</h2>
+          <span class="status-badge warning">Incomplete: {{ incomplete_count }}</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Student</th>
+                <th>Service</th>
+                <th>Status</th>
+                <th>Payment</th>
+                <th>Release</th>
+                <th>OR #</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in appointments %}
+                <tr>
+                  <td style="font-weight: 600; color: var(--primary-blue);">#{{ item.id }}</td>
+                  <td>{{ item.student.username }}</td>
+                  <td>{{ item.service_type }}</td>
+                  <td><span class="status-badge {% if item.status == 'processing' %}primary{% elif item.status == 'ready' %}success{% else %}warning{% endif %}">{{ item.get_status_display }}</span></td>
+                  <td>{{ item.get_payment_status_display }}</td>
+                  <td>{{ item.get_release_mode_display }}</td>
+                  <td style="font-family: monospace;">{{ item.or_number|default:'-' }}</td>
+                  <td><a class="button" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" href="{% url 'update_appointment' item.id %}">Update</a></td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="8" style="text-align: center; color: var(--muted); padding: 2rem;">No appointment records yet.</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Workflow Notes</h2>
+        </div>
+        <ul class="muted-list">
+          <li>You are viewing requests for <strong style="color: var(--primary-blue);">{{ office_name }}</strong> only.</li>
+          <li>Mark incomplete requests when students still lack requirements.</li>
+          <li>Use payment status and OR number before moving paid requests forward.</li>
+          <li>Switch requests to ready-for-release after document preparation.</li>
+        </ul>
+      </div>
+    </div>
+    
+  </div>
+</div>
+{% endblock %}

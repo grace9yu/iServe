@@ -1,0 +1,504 @@
+﻿<!doctype html>
+<html lang="en">
+{% load static %}
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <title>{% block title %}iServe{% endblock %}</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --nav-bg: #ffffff;
+      --footer-bg: #bdd6ef;
+      --dark-bg: #2f4d28;
+      --light-bg: #ffffff;
+      --primary-green: #2f4d28; 
+      --accent-blue: #283b4d;
+      --ink: #151615;
+      --muted: #2483db;
+      --light-text: #0f0f0f;
+      --line: #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+      color: var(--ink);
+      background-color: var(--bg);
+      display: flex;
+      flex-direction: column;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      width: min(1180px, calc(100% - 2rem));
+      margin: 0 auto;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: var(--nav-bg);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px;
+    }
+
+    .brand {
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    
+    .brand-dots { display: flex; gap: 4px; }
+    .brand-dot-1 { width: 12px; height: 12px; background: var(--accent-green); border-radius: 50%; }
+    .brand-dot-2 { width: 12px; height: 12px; background: var(--primary-blue); border-radius: 50%; }
+
+    .nav-links {
+      display: flex;
+      height: 100%;
+    }
+
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      padding: 0 1.2rem;
+      height: 100%;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: capitalize;
+      color: var(--muted);
+      transition: all 0.2s ease;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      background: var(--primary-blue);
+      color: var(--light-text);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .button {
+      background: var(--accent-green);
+      color: var(--light-text);
+      padding: 0.5rem 1.2rem;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: opacity 0.2s;
+      border: none;
+      cursor: pointer;
+      display: inline-block;
+    }
+    .button:hover { opacity: 0.9; }
+
+    .button-blue {
+      background: var(--primary-blue);
+      color: var(--light-text);
+      padding: 0.5rem 1.2rem;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+      display: inline-block;
+    }
+    .button-blue:hover { opacity: 0.9; }
+
+    /* Sections */
+    .section-dark {
+      background:
+        linear-gradient(rgba(47, 77, 40, 0.6), rgba(47, 77, 40, 0.6)),
+        url("{% static 'images/Background-Mindoro State University.jpg' %}") center/cover no-repeat;
+      color: var(--light-text);
+      padding: 5rem 0;
+      position: relative;
+    }
+    
+    .section-dark .section-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .section-light {
+      background-color: var(--light-bg);
+      color: var(--ink);
+      padding: 4.5rem 0;
+    }
+    
+    .section-white {
+      background-color: var(--bg);
+      color: var(--ink);
+      padding: 4.5rem 0;
+    }
+
+    /* Titles */
+    .section-title {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+    .section-title span {
+      display: inline-block;
+      background: var(--primary-blue);
+      color: var(--light-text);
+      padding: 0.5rem 1.5rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+    }
+    
+    .section-title-left {
+      margin-bottom: 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .section-title-left h2 {
+      color: var(--accent-green);
+      font-size: 1.8rem;
+      font-style: italic;
+    }
+
+    .section-title-light {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .section-title-light h2 {
+      color: var(--primary-blue);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 1.4rem;
+    }
+    .section-subtitle {
+      text-align: center;
+      color: var(--muted);
+      max-width: 800px;
+      margin: 0 auto 3rem auto;
+      font-style: italic;
+    }
+
+    /* Footer */
+    .footer {
+      background-color: var(--footer-bg);
+      color: var(--muted);
+      padding: 4rem 0 2rem;
+      margin-top: auto;
+      font-size: 0.85rem;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+    }
+    .footer-title {
+      color: var(--accent-green);
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+    .footer p { margin-bottom: 0.8rem; line-height: 1.6; }
+    
+    .footer-input {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      border: none;
+      background: #ffffff;
+    }
+
+    /* Form and default elements */
+    .messages { padding: 1rem 0; width: min(1180px, calc(100% - 2rem)); margin: 0 auto; }
+    .message { padding: 1rem; margin-bottom: 1rem; border-radius: 4px; }
+    .message.success { background: #d4edda; color: #27ae60; border: 1px solid #c3e6cb; }
+    .message.error { background: #f8d7da; color: #c0392b; border: 1px solid #f5c6cb; }
+
+    .form-stack { display: grid; gap: 0.9rem; max-width: 600px; margin: 0 auto; }
+    label { display: block; font-weight: bold; margin-bottom: 0.35rem; }
+    input, select, textarea {
+      width: 100%;
+      padding: 0.72rem 0.8rem;
+      border: 1px solid var(--line);
+      background: #fff;
+      font: inherit;
+      color: var(--ink);
+    }
+
+    main { flex: 1; display: flex; flex-direction: column; }
+    
+    @media (max-width: 900px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .nav-links { display: none; } /* Simplified for mobile */
+    }
+        /* Dashboard specific styles */
+    .dashboard-container { background: #f4f7f6; flex: 1; padding: 2rem 0; width: 100%; }
+    .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+    .dash-header h1 { font-size: 1.8rem; color: var(--ink); font-weight: 600; margin: 0; }
+    
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 1.5rem; }
+    .metrics-card { background: #ffffff; border-radius: 16px; padding: 1.5rem; display: flex; align-items: center; gap: 1.2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); }
+    .metric-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+    .metric-icon.blue { background: #eef3ff; color: #4376ff; }
+    .metric-icon.purple { background: #f2eeff; color: #6243ff; }
+    .metric-icon.green { background: #eefbee; color: #2ebc7e; }
+    .metric-icon.red { background: #ffebeb; color: #ff5555; }
+    
+    .metric-info { display: flex; flex-direction: column; }
+    .metric-value { font-size: 1.6rem; font-weight: 700; color: var(--ink); line-height: 1.1; margin-bottom: 0.3rem; }
+    .metric-label { font-size: 0.85rem; color: var(--muted); font-weight: 600; }
+    
+    .dash-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; }
+    
+    .panel { background: #ffffff; border-radius: 16px; padding: 1.8rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); margin-bottom: 1.5rem; }
+    .panel-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .panel-head h2 { font-size: 1.2rem; font-weight: 700; color: var(--ink); margin: 0; }
+    
+    .table-wrap { overflow-x: auto; width: 100%; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th { color: var(--muted); font-weight: 600; font-size: 0.85rem; padding: 0.8rem 1rem; border-bottom: 1px solid var(--line); }
+    td { padding: 1rem; font-size: 0.9rem; color: var(--ink); border-bottom: 1px solid #f2f2f2; }
+    tr:last-child td { border-bottom: none; }
+    
+    .status-badge { display: inline-block; padding: 0.35rem 0.8rem; border-radius: 6px; font-size: 0.8rem; font-weight: 700; }
+    .status-badge.primary { background: #eef3ff; color: #4376ff; }
+    .status-badge.warning { background: #fff6e5; color: #f59f00; }
+    .status-badge.success { background: #eefbee; color: #2ebc7e; }
+    .status-badge.danger { background: #ffebeb; color: #ff5555; }
+    .status-badge.default { background: #f0f0f0; color: var(--muted); }
+
+    .muted-list { list-style: none; padding: 0; margin: 0; }
+    .muted-list li { padding: 0.6rem 0; border-bottom: 1px solid #f2f2f2; color: var(--muted); font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; }
+    .muted-list li:last-child { border-bottom: none; }
+    .muted-list li::before { content: '•'; color: var(--primary-blue); font-size: 1.5rem; line-height: 0.5; }
+
+    @media (max-width: 1000px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .dash-grid { grid-template-columns: 1fr; }
+    }
+@media (max-width: 600px) {
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Notifications Dropdown */
+    .notif-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    .notif-btn {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 0.5rem;
+    }
+    .notif-btn:hover {
+      color: var(--primary-blue);
+    }
+    .notif-badge {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: var(--accent-green);
+      color: white;
+      font-size: 0.65rem;
+      font-weight: bold;
+      padding: 0.1rem 0.35rem;
+      border-radius: 50%;
+    }
+    .notif-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      width: 320px;
+      background: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      z-index: 2000;
+      text-align: left;
+    }
+    .notif-dropdown.open .notif-menu {
+      display: block;
+    }
+    .notif-header {
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid var(--line);
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--ink);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .notif-body {
+      max-height: 350px;
+      overflow-y: auto;
+    }
+    .notif-item {
+      display: block;
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid var(--line);
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 0.85rem;
+    }
+    .notif-item:hover {
+      background: #f9f9f9;
+    }
+    .notif-item.unread {
+      background: #f0f7fb;
+    }
+    .notif-item.unread:hover {
+      background: #e3eff6;
+    }
+    .notif-time {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+    .notif-none {
+      padding: 1.5rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+  </style>
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container navbar-inner">
+            {% load static %}
+      <a class="brand" href="{% url 'home' %}">
+        <img src="{% static 'images/logo.jfif' %}" alt="iServe Logo" style="height: 73px; width: auto;">
+      </a>
+      <div class="nav-links">
+        {% if not request.user.is_authenticated %}
+          <a class="nav-link{% if request.resolver_match.url_name == 'home' %} active{% endif %}" href="{% url 'home' %}">Home</a>
+          <a class="nav-link{% if request.resolver_match.url_name == 'student_services' or request.resolver_match.url_name == 'create_appointment' %} active{% endif %}" href="{% url 'student_services' %}">Student Services</a>
+        {% else %}
+          {% if request.user.is_superuser %}
+            <a class="nav-link{% if request.resolver_match.url_name == 'superadmin_dashboard' %} active{% endif %}" href="{% url 'superadmin_dashboard' %}">Admin Panel</a>
+          {% elif request.user.is_staff %}
+            <a class="nav-link{% if request.resolver_match.url_name == 'admin_dashboard' or request.resolver_match.url_name == 'update_appointment' %} active{% endif %}" href="{% url 'admin_dashboard' %}">Dashboard</a>
+          {% else %}
+            <a class="nav-link{% if request.resolver_match.url_name == 'student_dashboard' %} active{% endif %}" href="{% url 'student_dashboard' %}">Dashboard</a>
+          {% endif %}
+        {% endif %}
+      </div>
+      <div class="nav-actions">
+        {% if request.user.is_authenticated %}
+          <div class="notif-dropdown" id="notifDropdown">
+            <button class="notif-btn" type="button" onclick="toggleNotif(event)" title="Notifications" style="margin-right: 0.5rem;">
+              🔔
+              {% if unread_notifications_count > 0 %}
+                <span class="notif-badge">{{ unread_notifications_count }}</span>
+              {% endif %}
+            </button>
+            <div class="notif-menu">
+              <div class="notif-header">
+                Notifications
+              </div>
+              <div class="notif-body">
+                {% if recent_notifications %}
+                  {% for notif in recent_notifications %}
+                    <a href="{% if notif.link %}{{ notif.link }}{% else %}#{% endif %}" class="notif-item {% if not notif.is_read %}unread{% endif %}">
+                      {{ notif.message }}
+                      <span class="notif-time">{{ notif.created_at|timesince }} ago</span>
+                    </a>
+                  {% endfor %}
+                {% else %}
+                  <div class="notif-none">No recent actions</div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          <span style="color: var(--muted); font-size: 0.9rem; font-weight: 600;">{{ request.user.username }}</span>
+          <form style="margin: 0;" method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button class="button" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" type="submit">Logout</button>
+          </form>
+        {% else %}
+          <a class="nav-link" href="{% url 'login' %}">Login</a>
+          <a class="button-blue" href="{% url 'register' %}">Register</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+  
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <h4 class="footer-title">Who We Are</h4>
+        <p>iServe provides streamlined student documentation workflows. Moving from concept to release quickly and securely.</p>
+      </div>
+      <div>
+        <h4 class="footer-title">Contact</h4>
+        <p>Email: iserve@university.edu</p>
+        <p>Phone: +1 (555) 123-4567</p>
+        <p>Location: Main Admin Bldg</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Toggle Notification Dropdown
+    function toggleNotif(event) {
+      event.stopPropagation();
+      var dropdown = document.getElementById('notifDropdown');
+      if (dropdown) {
+        dropdown.classList.toggle('open');
+      }
+    }
+
+    // Close when clicking outside
+    document.addEventListener('click', function(event) {
+      var dropdown = document.getElementById('notifDropdown');
+      if (dropdown && dropdown.classList.contains('open')) {
+        if (!dropdown.contains(event.target)) {
+          dropdown.classList.remove('open');
+        }
+      }
+    });
+  </script>
+</body>
+</html>
+

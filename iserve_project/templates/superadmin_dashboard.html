@@ -1,0 +1,166 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}Superadmin Dashboard | iServe{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+  <div class="container">
+    
+    <div class="dash-header">
+      <div>
+        <span class="eyebrow" style="color: var(--primary-blue); font-size: 0.85rem; font-weight: 700; text-transform: uppercase;">SUPERADMIN DASHBOARD</span>
+        <h1>Registration Management</h1>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="metrics-card">
+        <div class="metric-icon purple">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect><path d="M9 14h6"></path><path d="M9 18h6"></path><path d="M9 10h6"></path></svg>
+        </div>
+        <div class="metric-info">
+          <span class="metric-value">{{ pending_count }}</span>
+          <span class="metric-label">Pending Approvals</span>
+        </div>
+      </div>
+      
+      <div class="metrics-card">
+        <div class="metric-icon green">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <div class="metric-info">
+          <span class="metric-value">{{ approved_count }}</span>
+          <span class="metric-label">Approved Staff</span>
+        </div>
+      </div>
+      
+      <div class="metrics-card">
+        <div class="metric-icon red">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <div class="metric-info">
+          <span class="metric-value">{{ rejected_count }}</span>
+          <span class="metric-label">Rejected Requests</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-grid">
+      <div class="panel" style="grid-column: 1 / -1;">
+        <div class="panel-head">
+          <h2>Pending Staff Registrations</h2>
+          <span class="status-badge warning">{{ pending_count }} pending</span>
+        </div>
+        
+        {% if pending_registrations %}
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Office</th>
+                <th>Staff ID</th>
+                <th>Contact Number</th>
+                <th>Submitted</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for reg in pending_registrations %}
+                <tr>
+                  <td style="font-weight: 600; color: var(--primary-blue);">{{ reg.username }}</td>
+                  <td>{{ reg.email }}</td>
+                  <td>{{ reg.office.get_name_display }}</td>
+                  <td style="font-family: monospace;">{{ reg.id_number }}</td>
+                  <td>{{ reg.contact_number }}</td>
+                  <td>{{ reg.created_at|date:"M d, Y" }}</td>
+                  <td>
+                    <div style="display: flex; gap: 0.5rem;">
+                      <a class="button" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; background: var(--success);" href="{% url 'approve_staff_registration' reg.id %}">Approve</a>
+                      <a class="button" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; background: transparent; color: var(--danger); border: 1px solid var(--danger);" href="{% url 'reject_staff_registration' reg.id %}">Reject</a>
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div style="text-align: center; color: var(--muted); padding: 2rem;">
+          No pending registration requests at this time.
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Approved Registrations</h2>
+          <span class="status-badge success">{{ approved_count }} approved</span>
+        </div>
+        {% if approved_registrations %}
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Office</th>
+                <th>Staff ID</th>
+                <th>Approved Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for reg in approved_registrations %}
+                <tr>
+                  <td style="font-weight: 600;">{{ reg.username }}</td>
+                  <td>{{ reg.office.get_name_display }}</td>
+                  <td style="font-family: monospace;">{{ reg.id_number }}</td>
+                  <td style="font-size: 0.85rem;">{{ reg.approved_at|date:"M d, Y" }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div style="text-align: center; color: var(--muted); padding: 2rem;">No approved registrations yet.</div>
+        {% endif %}
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Rejected Registrations</h2>
+          <span class="status-badge" style="background: rgba(220, 53, 69, 0.1); color: var(--danger);">{{ rejected_count }} rejected</span>
+        </div>
+        {% if rejected_registrations %}
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Office</th>
+                <th>Reason</th>
+                <th>Rejected Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for reg in rejected_registrations %}
+                <tr>
+                  <td style="font-weight: 600;">{{ reg.username }}</td>
+                  <td>{{ reg.office.get_name_display }}</td>
+                  <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ reg.rejection_reason }}">{{ reg.rejection_reason|truncatewords:5 }}</td>
+                  <td style="font-size: 0.85rem;">{{ reg.rejected_at|date:"M d, Y" }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div style="text-align: center; color: var(--muted); padding: 2rem;">No rejected registrations.</div>
+        {% endif %}
+      </div>
+
+    </div>
+    
+  </div>
+</div>
+{% endblock %}

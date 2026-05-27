@@ -1,0 +1,210 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}Student Services | iServe{% endblock %}
+
+{% block extra_head %}
+<style>
+  .hero-services {
+    background-color: var(--light-bg);
+    padding: 4rem 0;
+    margin-bottom: 2rem;
+  }
+  
+  .services-hero-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 3rem;
+  }
+  
+  .eyebrow {
+    color: var(--muted);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+    display: block;
+  }
+  
+  .hero-services h1 {
+    font-size: 2.2rem;
+    color: var(--ink);
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+  
+  .hero-services p {
+    color: var(--muted);
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+  
+  .action-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .panel {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+  
+  .panel h3 {
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+  }
+  
+  .muted-list {
+    list-style: none;
+  }
+  .muted-list li {
+    color: var(--muted);
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .muted-list li::before {
+    content: '✓';
+    color: var(--accent-orange);
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .service-card {
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    border-color: var(--primary-blue);
+  }
+
+  .service-card strong {
+    color: var(--ink);
+    font-size: 1.1rem;
+    display: block;
+    margin-bottom: 0.8rem;
+  }
+
+  .service-card p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+
+  .status-badge {
+    display: inline-block;
+    background: #eaf5fc;
+    color: var(--primary-blue);
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .section-head h2 {
+    color: var(--ink);
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+
+  @media (max-width: 900px) {
+    .services-hero-grid { grid-template-columns: 1fr; }
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  
+  @media (max-width: 600px) {
+    .services-grid { grid-template-columns: 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+  <section class="hero-services">
+    <div class="container">
+      <div class="services-hero-grid">
+        <div>
+          <span class="eyebrow">Student Services</span>
+          <h1>Choose a service and move directly into the request workflow.</h1>  
+          <p>
+            This page is now the direct entry point from the main page. Students can review services, then continue to request scheduling and status tracking.
+          </p>
+          <div class="action-row">
+            {% if request.user.is_authenticated and not request.user.is_staff %}  
+              <a class="button" href="{% url 'create_appointment' %}">Request a Service</a>                                                                                   
+              <a class="button-blue" href="{% url 'student_dashboard' %}">Open Dashboard</a>                                                                               
+            {% elif request.user.is_authenticated and request.user.is_staff %}    
+              <a class="button" href="{% url 'admin_dashboard' %}">Open Staff Dashboard</a>                                                                                 
+            {% else %}
+              <a class="button" href="{% url 'login' %}">Sign In to Continue</a>  
+              <a class="button-blue" style="background: transparent; border: 1px solid var(--line); color: var(--ink);" href="{% url 'register' %}">Register</a>                                                                                   
+            {% endif %}
+          </div>
+        </div>
+        <div class="panel">
+          <h3>Supported flow today</h3>
+          <ul class="muted-list">
+            <li>Service selection</li>
+            <li>Appointment scheduling</li>
+            <li>Payment-required branching</li>
+            <li>Staff processing and preparation</li>
+            <li>Digital or physical release tracking</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="section-head">
+      <h2>Available Services</h2>
+    </div>
+    <div class="services-grid">
+      {% for service in services %}
+        <article class="service-card">
+          <strong>{{ service.name }}</strong>
+          <p>{{ service.description }}</p>
+          <div><span class="status-badge">{{ service.release }}</span></div>        
+        </article>
+      {% empty %}
+        <article class="service-card">
+          <strong>Transcript of Records</strong>
+          <p>Request official transcript processing with appointment-based release.</p>
+          <div><span class="status-badge">Physical or digital release</span></div>        
+        </article>
+        <article class="service-card">
+          <strong>Certificate Requests</strong>
+          <p>Generate enrollment, graduation, and good moral certificates.</p>
+          <div><span class="status-badge">Usually same workflow with optional payment</span></div>        
+        </article>
+        <article class="service-card">
+          <strong>Document Authentication</strong>
+          <p>Submit academic documents for verification and release tracking.</p>
+          <div><span class="status-badge">Physical claim or downloadable file</span></div>        
+        </article>
+        <article class="service-card">
+          <strong>Appointment Scheduling</strong>
+          <p>Choose a release schedule and track request completion in real time.</p>
+          <div><span class="status-badge">Aligned to staff processing dashboard</span></div>        
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+{% endblock %}
